@@ -62,7 +62,13 @@
 						"type": "SqlPoolSink",
 						"allowCopyCommand": true
 					},
-					"enableStaging": false
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "Inputdata",
+							"type": "LinkedServiceReference"
+						}
+					}
 				},
 				"inputs": [
 					{
