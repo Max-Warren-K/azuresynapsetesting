@@ -75,6 +75,92 @@
 									"type": "LinkedServiceReference"
 								},
 								"path": ""
+							},
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['customers']['customer'][0]['id']"
+										},
+										"sink": {
+											"name": "id",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"path": "$['customers']['customer'][0]['person']['name']"
+										},
+										"sink": {
+											"name": "name",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['customers']['customer'][0]['person']['lastname']"
+										},
+										"sink": {
+											"name": "lastname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['customers']['customer'][0]['person']['age']"
+										},
+										"sink": {
+											"name": "age",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"path": "$['customers']['customer'][0]['address']['country']"
+										},
+										"sink": {
+											"name": "country",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['customers']['customer'][0]['address']['city']"
+										},
+										"sink": {
+											"name": "city",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['customers']['customer'][0]['address']['postcode']"
+										},
+										"sink": {
+											"name": "postcode",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['customers']['customer'][0]['address']['street']"
+										},
+										"sink": {
+											"name": "street",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['customers']['customer'][0]['address']['building']"
+										},
+										"sink": {
+											"name": "building",
+											"type": "String"
+										}
+									}
+								]
 							}
 						},
 						"inputs": [
