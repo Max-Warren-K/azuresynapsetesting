@@ -33,7 +33,14 @@
 						"allowCopyCommand": true,
 						"tableOption": "autoCreate"
 					},
-					"enableStaging": false
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "Inputdata",
+							"type": "LinkedServiceReference"
+						},
+						"path": ""
+					}
 				},
 				"inputs": [
 					{
