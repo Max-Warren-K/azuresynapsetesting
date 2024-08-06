@@ -24,7 +24,7 @@
 						},
 						"formatSettings": {
 							"type": "XmlReadSettings",
-							"validationMode": "xsd",
+							"validationMode": "none",
 							"detectDataType": true,
 							"namespaces": true
 						}
