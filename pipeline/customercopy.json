@@ -52,7 +52,7 @@
 						"mappings": [
 							{
 								"source": {
-									"path": "$['customers']['customer'][0]['id']"
+									"path": "['id']"
 								},
 								"sink": {
 									"name": "id",
@@ -61,7 +61,7 @@
 							},
 							{
 								"source": {
-									"path": "$['customers']['customer'][0]['person']['name']"
+									"path": "['person']['name']"
 								},
 								"sink": {
 									"name": "name",
@@ -70,7 +70,7 @@
 							},
 							{
 								"source": {
-									"path": "$['customers']['customer'][0]['person']['lastname']"
+									"path": "['person']['lastname']"
 								},
 								"sink": {
 									"name": "lastname",
@@ -79,7 +79,7 @@
 							},
 							{
 								"source": {
-									"path": "$['customers']['customer'][0]['person']['age']"
+									"path": "['person']['age']"
 								},
 								"sink": {
 									"name": "age",
@@ -88,7 +88,7 @@
 							},
 							{
 								"source": {
-									"path": "$['customers']['customer'][0]['address']['country']"
+									"path": "['address']['country']"
 								},
 								"sink": {
 									"name": "country",
@@ -97,7 +97,7 @@
 							},
 							{
 								"source": {
-									"path": "$['customers']['customer'][0]['address']['city']"
+									"path": "['address']['city']"
 								},
 								"sink": {
 									"name": "city",
@@ -106,7 +106,7 @@
 							},
 							{
 								"source": {
-									"path": "$['customers']['customer'][0]['address']['postcode']"
+									"path": "['address']['postcode']"
 								},
 								"sink": {
 									"name": "postcode",
@@ -115,7 +115,7 @@
 							},
 							{
 								"source": {
-									"path": "$['customers']['customer'][0]['address']['street']"
+									"path": "['address']['street']"
 								},
 								"sink": {
 									"name": "street",
@@ -124,14 +124,15 @@
 							},
 							{
 								"source": {
-									"path": "$['customers']['customer'][0]['address']['building']"
+									"path": "['address']['building']"
 								},
 								"sink": {
 									"name": "building",
 									"type": "String"
 								}
 							}
-						]
+						],
+						"collectionReference": "$['customers']['customer']"
 					}
 				},
 				"inputs": [

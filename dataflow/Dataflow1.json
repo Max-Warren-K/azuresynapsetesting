@@ -14,10 +14,6 @@
 			],
 			"sinks": [
 				{
-					"dataset": {
-						"referenceName": "orders_source",
-						"type": "DatasetReference"
-					},
 					"name": "sink1"
 				}
 			],
@@ -46,16 +42,11 @@
 				"Split derive(value = iif(equals(currency, \"$\"), toInteger(intvalue * 0.78), iif(equals(currency, \"€\"), toInteger(intvalue * 0.86), intvalue))) ~> normalvalue",
 				"normalvalue sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     input(",
-				"          id as string,",
-				"          date as string,",
-				"          value as string,",
-				"          customer_id as string,",
-				"          product_id as string",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     saveOrder: 1) ~> sink1"
+				"     store: 'synapse',",
+				"     databaseType: 'spark',",
+				"     format: 'table',",
+				"     database: '',",
+				"     tableName: '') ~> sink1"
 			]
 		}
 	}
