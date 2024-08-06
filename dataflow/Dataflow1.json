@@ -44,16 +44,7 @@
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     saveOrder: 1,",
-				"     mapColumn(",
-				"          id,",
-				"          date,",
-				"          value,",
-				"          customer_id,",
-				"          product_id,",
-				"          intvalue,",
-				"          currency",
-				"     )) ~> sink1"
+				"     saveOrder: 1) ~> sink1"
 			]
 		}
 	}
