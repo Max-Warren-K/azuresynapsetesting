@@ -218,7 +218,7 @@
 								"parameters": {},
 								"datasetParameters": {
 									"ImportOrders": {},
-									"ExportOrders": {}
+									"sink1": {}
 								}
 							},
 							"staging": {},
@@ -246,45 +246,7 @@
 			"properties": {
 				"annotations": [],
 				"type": "SqlPoolTable",
-				"schema": [
-					{
-						"name": "id",
-						"type": "uniqueidentifier"
-					},
-					{
-						"name": "name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "lastname",
-						"type": "nvarchar"
-					},
-					{
-						"name": "age",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "country",
-						"type": "nvarchar"
-					},
-					{
-						"name": "city",
-						"type": "nvarchar"
-					},
-					{
-						"name": "postcode",
-						"type": "nvarchar"
-					},
-					{
-						"name": "street",
-						"type": "nvarchar"
-					},
-					{
-						"name": "building",
-						"type": "nvarchar"
-					}
-				],
+				"schema": [],
 				"typeProperties": {
 					"schema": "",
 					"table": "customers"
@@ -484,10 +446,10 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "orders_source",
+								"referenceName": "AzureSynapseAnalyticsTable1",
 								"type": "DatasetReference"
 							},
-							"name": "ExportOrders"
+							"name": "sink1"
 						}
 					],
 					"transformations": [
@@ -527,21 +489,22 @@
 						"     skipDuplicateMapOutputs: true) ~> select1",
 						"select1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     input(",
-						"          id as string,",
-						"          date as string,",
-						"          value as string,",
-						"          customer_id as string,",
-						"          product_id as string",
-						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     staged: true,",
+						"     allowCopyCommand: true,",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     saveOrder: 1) ~> ExportOrders"
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 					]
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/orders_source')]"
+				"[concat(variables('workspaceId'), '/datasets/orders_source')]",
+				"[concat(variables('workspaceId'), '/datasets/AzureSynapseAnalyticsTable1')]"
 			]
 		},
 		{
@@ -565,6 +528,49 @@
 			},
 			"dependsOn": [],
 			"location": "ukwest"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SqlPoolTable1')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "SqlPoolTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "orders"
+				},
+				"sqlPool": {
+					"referenceName": "extrapool",
+					"type": "SqlPoolReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/sqlPools/extrapool')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AzureSynapseAnalyticsTable1')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "max-warren-academy-WorkspaceDefaultSqlServer",
+					"type": "LinkedServiceReference",
+					"parameters": {}
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "orders"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/max-warren-academy-WorkspaceDefaultSqlServer')]"
+			]
 		}
 	]
 }
