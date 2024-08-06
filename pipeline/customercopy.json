@@ -55,7 +55,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "orders",
+						"referenceName": "customers",
 						"type": "DatasetReference"
 					}
 				]
