@@ -4,6 +4,10 @@
 		"annotations": [],
 		"type": "SqlPoolTable",
 		"schema": [],
+		"typeProperties": {
+			"schema": "",
+			"table": "orders"
+		},
 		"sqlPool": {
 			"referenceName": "extrapool",
 			"type": "SqlPoolReference"
