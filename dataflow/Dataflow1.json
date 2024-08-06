@@ -44,7 +44,7 @@
 				"source1 derive(intvalue = toInteger((substring(value, 2, length(value) - 4) + right(value, 2))),",
 				"          currency = left(value, 1)) ~> Split",
 				"Split derive(value = iif(equals(currency, \"$\"), toInteger(intvalue * 0.78), iif(equals(currency, \"€\"), toInteger(intvalue * 0.86), intvalue))) ~> normalvalue",
-				"normalvalue sink(allowSchemaDrift: false,",
+				"normalvalue sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          id as string,",
