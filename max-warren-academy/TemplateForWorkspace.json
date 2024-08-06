@@ -35,7 +35,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/Pipeline 1')]",
+			"name": "[concat(parameters('workspaceName'), '/customercopy')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -57,7 +57,7 @@
 								"type": "XmlSource",
 								"storeSettings": {
 									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
+									"recursive": false,
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -67,16 +67,19 @@
 								}
 							},
 							"sink": {
-								"type": "JsonSink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings",
-									"copyBehavior": "PreserveHierarchy"
-								},
-								"formatSettings": {
-									"type": "JsonWriteSettings"
-								}
+								"type": "SqlPoolSink",
+								"allowCopyCommand": true,
+								"copyCommandSettings": {},
+								"tableOption": "autoCreate"
 							},
-							"enableStaging": false
+							"enableStaging": true,
+							"stagingSettings": {
+								"linkedServiceName": {
+									"referenceName": "Inputdata",
+									"type": "LinkedServiceReference"
+								},
+								"path": ""
+							}
 						},
 						"inputs": [
 							{
@@ -87,7 +90,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "orders_source",
+								"referenceName": "orders",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -101,7 +104,54 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/customers_source')]",
-				"[concat(variables('workspaceId'), '/datasets/orders_source')]"
+				"[concat(variables('workspaceId'), '/datasets/orders')]",
+				"[concat(variables('workspaceId'), '/linkedServices/Inputdata')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ordercopy')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/dataflows/Dataflow1')]"
 			]
 		},
 		{
@@ -153,7 +203,10 @@
 				"annotations": [],
 				"type": "SqlPoolTable",
 				"schema": [],
-				"typeProperties": {},
+				"typeProperties": {
+					"schema": "",
+					"table": "orders"
+				},
 				"sqlPool": {
 					"referenceName": "extrapool",
 					"type": "SqlPoolReference"
@@ -285,6 +338,73 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Dataflow1')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "orders_source",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "orders_source",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "Split"
+						},
+						{
+							"name": "normalvalue"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          id as string,",
+						"          date as string,",
+						"          value as string,",
+						"          customer_id as string,",
+						"          product_id as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     documentForm: 'documentPerLine') ~> source1",
+						"source1 derive(intvalue = toInteger((substring(value, 2, length(value) - 4) + right(value, 2))),",
+						"          currency = left(value, 1)) ~> Split",
+						"Split derive(value = iif(equals(currency, \"$\"), toInteger(intvalue * 0.78), iif(equals(currency, \"€\"), toInteger(intvalue * 0.86), intvalue))) ~> normalvalue",
+						"normalvalue sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          id as string,",
+						"          date as string,",
+						"          value as string,",
+						"          customer_id as string,",
+						"          product_id as string",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     saveOrder: 1) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/orders_source')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
