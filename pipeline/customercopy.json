@@ -29,14 +29,8 @@
 						}
 					},
 					"sink": {
-						"type": "JsonSink",
-						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings",
-							"copyBehavior": "PreserveHierarchy"
-						},
-						"formatSettings": {
-							"type": "JsonWriteSettings"
-						}
+						"type": "SqlPoolSink",
+						"allowCopyCommand": true
 					},
 					"enableStaging": false
 				},
@@ -48,7 +42,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "orders_source",
+						"referenceName": "orders",
 						"type": "DatasetReference"
 					}
 				]
