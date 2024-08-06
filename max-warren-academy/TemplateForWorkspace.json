@@ -81,7 +81,7 @@
 								"mappings": [
 									{
 										"source": {
-											"path": "$['customers']['customer'][0]['id']"
+											"path": "['id']"
 										},
 										"sink": {
 											"name": "id",
@@ -90,7 +90,7 @@
 									},
 									{
 										"source": {
-											"path": "$['customers']['customer'][0]['person']['name']"
+											"path": "['person']['name']"
 										},
 										"sink": {
 											"name": "name",
@@ -99,7 +99,7 @@
 									},
 									{
 										"source": {
-											"path": "$['customers']['customer'][0]['person']['lastname']"
+											"path": "['person']['lastname']"
 										},
 										"sink": {
 											"name": "lastname",
@@ -108,7 +108,7 @@
 									},
 									{
 										"source": {
-											"path": "$['customers']['customer'][0]['person']['age']"
+											"path": "['person']['age']"
 										},
 										"sink": {
 											"name": "age",
@@ -117,7 +117,7 @@
 									},
 									{
 										"source": {
-											"path": "$['customers']['customer'][0]['address']['country']"
+											"path": "['address']['country']"
 										},
 										"sink": {
 											"name": "country",
@@ -126,7 +126,7 @@
 									},
 									{
 										"source": {
-											"path": "$['customers']['customer'][0]['address']['city']"
+											"path": "['address']['city']"
 										},
 										"sink": {
 											"name": "city",
@@ -135,7 +135,7 @@
 									},
 									{
 										"source": {
-											"path": "$['customers']['customer'][0]['address']['postcode']"
+											"path": "['address']['postcode']"
 										},
 										"sink": {
 											"name": "postcode",
@@ -144,7 +144,7 @@
 									},
 									{
 										"source": {
-											"path": "$['customers']['customer'][0]['address']['street']"
+											"path": "['address']['street']"
 										},
 										"sink": {
 											"name": "street",
@@ -153,14 +153,15 @@
 									},
 									{
 										"source": {
-											"path": "$['customers']['customer'][0]['address']['building']"
+											"path": "['address']['building']"
 										},
 										"sink": {
 											"name": "building",
 											"type": "String"
 										}
 									}
-								]
+								],
+								"collectionReference": "$['customers']['customer']"
 							}
 						},
 						"inputs": [
@@ -199,6 +200,8 @@
 					{
 						"name": "Data flow1",
 						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -214,8 +217,8 @@
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
+									"ImportOrders": {},
+									"ExportOrders": {}
 								}
 							},
 							"staging": {},
@@ -243,7 +246,45 @@
 			"properties": {
 				"annotations": [],
 				"type": "SqlPoolTable",
-				"schema": [],
+				"schema": [
+					{
+						"name": "id",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "lastname",
+						"type": "nvarchar"
+					},
+					{
+						"name": "age",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "country",
+						"type": "nvarchar"
+					},
+					{
+						"name": "city",
+						"type": "nvarchar"
+					},
+					{
+						"name": "postcode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "street",
+						"type": "nvarchar"
+					},
+					{
+						"name": "building",
+						"type": "nvarchar"
+					}
+				],
 				"typeProperties": {
 					"schema": "",
 					"table": "customers"
@@ -289,7 +330,7 @@
 				"type": "SqlPoolTable",
 				"schema": [],
 				"typeProperties": {
-					"schema": "schema",
+					"schema": "",
 					"table": "orders"
 				},
 				"sqlPool": {
@@ -437,7 +478,7 @@
 								"referenceName": "orders_source",
 								"type": "DatasetReference"
 							},
-							"name": "source1"
+							"name": "ImportOrders"
 						}
 					],
 					"sinks": [
@@ -446,7 +487,7 @@
 								"referenceName": "orders_source",
 								"type": "DatasetReference"
 							},
-							"name": "sink1"
+							"name": "ExportOrders"
 						}
 					],
 					"transformations": [
@@ -455,6 +496,9 @@
 						},
 						{
 							"name": "normalvalue"
+						},
+						{
+							"name": "select1"
 						}
 					],
 					"scriptLines": [
@@ -468,11 +512,20 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
-						"     documentForm: 'documentPerLine') ~> source1",
-						"source1 derive(intvalue = toInteger((substring(value, 2, length(value) - 4) + right(value, 2))),",
+						"     documentForm: 'documentPerLine') ~> ImportOrders",
+						"ImportOrders derive(intvalue = toInteger((substring(value, 2, length(value) - 4) + right(value, 2))),",
 						"          currency = left(value, 1)) ~> Split",
 						"Split derive(value = iif(equals(currency, \"$\"), toInteger(intvalue * 0.78), iif(equals(currency, \"€\"), toInteger(intvalue * 0.86), intvalue))) ~> normalvalue",
-						"normalvalue sink(allowSchemaDrift: true,",
+						"normalvalue select(mapColumn(",
+						"          id,",
+						"          date,",
+						"          customer_id,",
+						"          product_id,",
+						"          intvalue",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
 						"          id as string,",
@@ -483,7 +536,7 @@
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     saveOrder: 1) ~> sink1"
+						"     saveOrder: 1) ~> ExportOrders"
 					]
 				}
 			},
