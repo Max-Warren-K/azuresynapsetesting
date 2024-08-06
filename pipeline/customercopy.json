@@ -55,7 +55,8 @@
 									"path": "$['customers']['customer'][0]['id']"
 								},
 								"sink": {
-									"name": "id"
+									"name": "id",
+									"type": "Guid"
 								}
 							},
 							{
@@ -63,7 +64,8 @@
 									"path": "$['customers']['customer'][0]['person']['name']"
 								},
 								"sink": {
-									"name": "name"
+									"name": "name",
+									"type": "String"
 								}
 							},
 							{
@@ -71,7 +73,8 @@
 									"path": "$['customers']['customer'][0]['person']['lastname']"
 								},
 								"sink": {
-									"name": "lastname"
+									"name": "lastname",
+									"type": "String"
 								}
 							},
 							{
@@ -79,7 +82,8 @@
 									"path": "$['customers']['customer'][0]['person']['age']"
 								},
 								"sink": {
-									"name": "age"
+									"name": "age",
+									"type": "Int32"
 								}
 							},
 							{
@@ -87,7 +91,8 @@
 									"path": "$['customers']['customer'][0]['address']['country']"
 								},
 								"sink": {
-									"name": "country"
+									"name": "country",
+									"type": "String"
 								}
 							},
 							{
@@ -95,7 +100,8 @@
 									"path": "$['customers']['customer'][0]['address']['city']"
 								},
 								"sink": {
-									"name": "city"
+									"name": "city",
+									"type": "String"
 								}
 							},
 							{
@@ -103,7 +109,8 @@
 									"path": "$['customers']['customer'][0]['address']['postcode']"
 								},
 								"sink": {
-									"name": "postcode"
+									"name": "postcode",
+									"type": "String"
 								}
 							},
 							{
@@ -111,7 +118,8 @@
 									"path": "$['customers']['customer'][0]['address']['street']"
 								},
 								"sink": {
-									"name": "street"
+									"name": "street",
+									"type": "String"
 								}
 							},
 							{
@@ -119,7 +127,8 @@
 									"path": "$['customers']['customer'][0]['address']['building']"
 								},
 								"sink": {
-									"name": "building"
+									"name": "building",
+									"type": "String"
 								}
 							}
 						]
