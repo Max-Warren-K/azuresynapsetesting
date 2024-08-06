@@ -9,7 +9,7 @@
 						"referenceName": "orders_source",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "ImportOrders"
 				}
 			],
 			"sinks": [
@@ -18,7 +18,7 @@
 						"referenceName": "orders_source",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "ExportOrders"
 				}
 			],
 			"transformations": [
@@ -43,8 +43,8 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     documentForm: 'documentPerLine') ~> source1",
-				"source1 derive(intvalue = toInteger((substring(value, 2, length(value) - 4) + right(value, 2))),",
+				"     documentForm: 'documentPerLine') ~> ImportOrders",
+				"ImportOrders derive(intvalue = toInteger((substring(value, 2, length(value) - 4) + right(value, 2))),",
 				"          currency = left(value, 1)) ~> Split",
 				"Split derive(value = iif(equals(currency, \"$\"), toInteger(intvalue * 0.78), iif(equals(currency, \"€\"), toInteger(intvalue * 0.86), intvalue))) ~> normalvalue",
 				"normalvalue select(mapColumn(",
@@ -56,8 +56,8 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
+				"select1 sink(allowSchemaDrift: false,",
+				"     validateSchema: true,",
 				"     input(",
 				"          id as string,",
 				"          date as string,",
@@ -66,7 +66,14 @@
 				"          product_id as string",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          id,",
+				"          date,",
+				"          customer_id,",
+				"          product_id,",
+				"          intvalue",
+				"     )) ~> ExportOrders"
 			]
 		}
 	}
