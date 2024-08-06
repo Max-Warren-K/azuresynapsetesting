@@ -1,12 +1,12 @@
 {
-	"name": "customers",
+	"name": "SqlPoolTable1",
 	"properties": {
 		"annotations": [],
 		"type": "SqlPoolTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "",
-			"table": "customers"
+			"schema": "dbo",
+			"table": "orders"
 		},
 		"sqlPool": {
 			"referenceName": "extrapool",
