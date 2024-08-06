@@ -68,8 +68,12 @@
 							},
 							"sink": {
 								"type": "SqlPoolSink",
-								"allowCopyCommand": true,
-								"copyCommandSettings": {},
+								"allowPolyBase": true,
+								"polyBaseSettings": {
+									"rejectValue": 0,
+									"rejectType": "value",
+									"useTypeDefault": true
+								},
 								"tableOption": "autoCreate"
 							},
 							"enableStaging": true,
@@ -162,7 +166,10 @@
 				"annotations": [],
 				"type": "SqlPoolTable",
 				"schema": [],
-				"typeProperties": {},
+				"typeProperties": {
+					"schema": "schema",
+					"table": "customers"
+				},
 				"sqlPool": {
 					"referenceName": "extrapool",
 					"type": "SqlPoolReference"
@@ -204,7 +211,7 @@
 				"type": "SqlPoolTable",
 				"schema": [],
 				"typeProperties": {
-					"schema": "",
+					"schema": "schema",
 					"table": "orders"
 				},
 				"sqlPool": {
