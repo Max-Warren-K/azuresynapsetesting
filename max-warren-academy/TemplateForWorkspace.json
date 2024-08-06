@@ -94,7 +94,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "orders",
+								"referenceName": "customers",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -108,7 +108,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/customers_source')]",
-				"[concat(variables('workspaceId'), '/datasets/orders')]",
+				"[concat(variables('workspaceId'), '/datasets/customers')]",
 				"[concat(variables('workspaceId'), '/linkedServices/Inputdata')]"
 			]
 		},
