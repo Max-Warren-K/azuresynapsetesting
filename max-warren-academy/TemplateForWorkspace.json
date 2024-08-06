@@ -251,7 +251,10 @@
 			"properties": {
 				"linkedServiceName": {
 					"referenceName": "max-warren-academy-WorkspaceDefaultSqlServer",
-					"type": "LinkedServiceReference"
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": "table"
+					}
 				},
 				"annotations": [],
 				"type": "AzureSqlDWTable",
