@@ -3,7 +3,45 @@
 	"properties": {
 		"annotations": [],
 		"type": "SqlPoolTable",
-		"schema": [],
+		"schema": [
+			{
+				"name": "id",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "lastname",
+				"type": "nvarchar"
+			},
+			{
+				"name": "age",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "country",
+				"type": "nvarchar"
+			},
+			{
+				"name": "city",
+				"type": "nvarchar"
+			},
+			{
+				"name": "postcode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "street",
+				"type": "nvarchar"
+			},
+			{
+				"name": "building",
+				"type": "nvarchar"
+			}
+		],
 		"typeProperties": {
 			"schema": "",
 			"table": "customers"

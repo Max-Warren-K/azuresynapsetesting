@@ -14,9 +14,9 @@
 			],
 			"sinks": [
 				{
-					"dataset": {
-						"referenceName": "orders_source",
-						"type": "DatasetReference"
+					"linkedService": {
+						"referenceName": "max-warren-academy-WorkspaceDefaultSqlServer",
+						"type": "LinkedServiceReference"
 					},
 					"name": "ExportOrders"
 				}
@@ -58,22 +58,20 @@
 				"     skipDuplicateMapOutputs: true) ~> select1",
 				"select1 sink(allowSchemaDrift: false,",
 				"     validateSchema: true,",
-				"     input(",
-				"          id as string,",
-				"          date as string,",
-				"          value as string,",
-				"          customer_id as string,",
-				"          product_id as string",
-				"     ),",
+				"     format: 'table',",
+				"     store: 'synapseanalytics',",
+				"     schemaName: '',",
+				"     tableName: '',",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     deletable: false,",
+				"     upsertable: false,",
+				"     allowCopyCommand: true,",
+				"     staged: true,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     mapColumn(",
-				"          id,",
-				"          date,",
-				"          customer_id,",
-				"          product_id,",
-				"          intvalue",
-				"     )) ~> ExportOrders"
+				"     saveOrder: 1,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> ExportOrders"
 			]
 		}
 	}
