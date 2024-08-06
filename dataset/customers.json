@@ -5,7 +5,7 @@
 		"type": "SqlPoolTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "schema",
+			"schema": "customer",
 			"table": "customers"
 		},
 		"sqlPool": {
