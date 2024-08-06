@@ -200,8 +200,6 @@
 					{
 						"name": "Data flow1",
 						"type": "ExecuteDataFlow",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -221,7 +219,13 @@
 									"sink1": {}
 								}
 							},
-							"staging": {},
+							"staging": {
+								"linkedService": {
+									"referenceName": "Inputdata",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "/storage"
+							},
 							"compute": {
 								"coreCount": 8,
 								"computeType": "General"
@@ -236,7 +240,50 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/dataflows/Dataflow1')]"
+				"[concat(variables('workspaceId'), '/dataflows/Dataflow1')]",
+				"[concat(variables('workspaceId'), '/linkedServices/Inputdata')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AzureSynapseAnalyticsTable1')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "max-warren-academy-WorkspaceDefaultSqlServer",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "orders"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/max-warren-academy-WorkspaceDefaultSqlServer')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SqlPoolTable1')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "SqlPoolTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "orders"
+				},
+				"sqlPool": {
+					"referenceName": "extrapool",
+					"type": "SqlPoolReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/sqlPools/extrapool')]"
 			]
 		},
 		{
@@ -528,49 +575,6 @@
 			},
 			"dependsOn": [],
 			"location": "ukwest"
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SqlPoolTable1')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": [],
-				"type": "SqlPoolTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "orders"
-				},
-				"sqlPool": {
-					"referenceName": "extrapool",
-					"type": "SqlPoolReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/sqlPools/extrapool')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/AzureSynapseAnalyticsTable1')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "max-warren-academy-WorkspaceDefaultSqlServer",
-					"type": "LinkedServiceReference",
-					"parameters": {}
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "orders"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/max-warren-academy-WorkspaceDefaultSqlServer')]"
-			]
 		}
 	]
 }
