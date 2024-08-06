@@ -19,6 +19,12 @@
 						"referenceName": "Dataflow1",
 						"type": "DataFlowReference"
 					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "Inputdata",
+							"type": "LinkedServiceReference"
+						}
+					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
