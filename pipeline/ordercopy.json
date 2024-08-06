@@ -23,7 +23,8 @@
 						"linkedService": {
 							"referenceName": "Inputdata",
 							"type": "LinkedServiceReference"
-						}
+						},
+						"folderPath": "/storage"
 					},
 					"compute": {
 						"coreCount": 8,
